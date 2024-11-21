@@ -6,7 +6,7 @@
 #    By: fschnorr <fschnorr@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/09 15:38:23 by fschnorr          #+#    #+#              #
-#    Updated: 2024/10/08 12:44:16 by fschnorr         ###   ########.fr        #
+#    Updated: 2024/11/21 09:41:36 by fschnorr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,21 +27,19 @@ $(NAME): $(OBJS)
 	@cp $(LIBFT_DIR)/libft.a .
 	@mv libft.a $(NAME)
 	@ar rcs $(NAME) $(OBJS)
-	@echo "ran ar."
+	@echo "ran ar for printf"
 
 %.o: %.c
 	@cc $(CFLAGS) $(INCLUDES) $(LIBFT_INCLUDES) -c $< -o $@
-	@echo "ran cc."
-
+	
 clean:
 	@rm -f $(OBJS)
-	@echo "ran clean."
-
+	
 fclean: clean
 	@rm -f $(NAME)
 	@rm -f ft_printf.out
 	@make fclean -C $(LIBFT_DIR)
-	@echo "ran fclean."
+	@echo "ran fclean for printf"
 
 re: fclean all
 
