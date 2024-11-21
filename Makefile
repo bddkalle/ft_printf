@@ -6,25 +6,27 @@
 #    By: fschnorr <fschnorr@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/09 15:38:23 by fschnorr          #+#    #+#              #
-#    Updated: 2024/11/21 09:41:36 by fschnorr         ###   ########.fr        #
+#    Updated: 2024/11/21 12:02:44 by fschnorr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libftprintf.a
+INCLUDES = -I includes
 SRC = src/ft_printf.c
 OBJS := $(SRC:%.c=%.o)
+
 CFLAGS := -Wall -Werror -Wextra
-INCLUDES = -I includes
+MFLAGS = --no-print-directory
+
 LIBFT_INCLUDES = -I lib/libft/includes
 LIBFT_DIR = lib/libft
-LIBFT_SRC_DIRS = $(LIBFT_DIR)/src/ctype $(LIBFT_DIR)/src/memory $(LIBFT_DIR)/src/stdio $(LIBFT_DIR)/src/string $(LIBFT_DIR)/src/stdlib $(LIBFT_DIR)/src/utils
-LIBFT_SRC = $(foreach dir, $(LIBFT_SRC_DIRS), $(wildcard $(dir)/*.c))
+LIBFT_AR = $(LIBFT_DIR)/libft.a
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@make -C $(LIBFT_DIR)
-	@cp $(LIBFT_DIR)/libft.a .
+	@make -C $(LIBFT_DIR) $(MFLAGS)
+	@cp $(LIBFT_AR) .
 	@mv libft.a $(NAME)
 	@ar rcs $(NAME) $(OBJS)
 	@echo "ran ar for printf"
@@ -38,15 +40,17 @@ clean:
 fclean: clean
 	@rm -f $(NAME)
 	@rm -f ft_printf.out
-	@make fclean -C $(LIBFT_DIR)
+	@make fclean -C $(LIBFT_DIR) $(MFLAGS)
 	@echo "ran fclean for printf"
 
 re: fclean all
 
 run:
-	@cc $(CFLAGS) $(INCLUDES) $(LIBFT_INCLUDES) $(SRC) $(LIBFT_SRC) -o ft_printf.out
+	@make -C $(LIBFT_DIR) $(MFLAGS)
+	@cc $(CFLAGS) $(INCLUDES) $(LIBFT_INCLUDES) $(SRC) $(LIBFT_AR) -o ft_printf.out
 	@./ft_printf.out
 
 valgrind: 
-	@cc $(CFLAGS) $(INCLUDES) $(LIBFT_INCLUDES) $(SRC) $(LIBFT_SRC) -g -O0 -o ft_printf.out
+	@make -C $(LIBFT_DIR) $(MFLAGS)
+	@cc $(CFLAGS) $(INCLUDES) $(LIBFT_INCLUDES) $(SRC) $(LIBFT_AR) -g -O0 -o ft_printf.out
 	@valgrind --leak-check=full ./ft_printf.out
